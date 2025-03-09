@@ -9,10 +9,10 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>nl.novi.sd</groupId>
-    <artifactId>CarPark</artifactId>
+    <artifactId>CarRental</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>CarPark</name>
-    <description>CarPark</description>
+    <name>CarRental</name>
+    <description>Karels AutoVerhuur</description>
     <url />
     <licenses>
         <license />
