@@ -14,6 +14,10 @@ public class ParkingLot {
 
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+
     @OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL)
     private List<ParkingSpace> parkingSpaces;
 }
