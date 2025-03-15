@@ -1,3 +1,4 @@
+[//]: # (Install Mermaid plugin to view solution)
 ```mermaid
   classDiagram
     class User {

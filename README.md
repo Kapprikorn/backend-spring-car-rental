@@ -8,8 +8,9 @@ Ensure you have the following installed on your system:
 
 - [Java 17+](https://adoptium.net/)
 - [Maven](https://maven.apache.org/download.cgi) (Ensure it's added to your `PATH`)
-- [PostgreSQL](https://www.postgresql.org/download/) (Ensure pgAdmin is installed)
+- [PostgreSQL](https://www.postgresql.org/download/) (Ensure pgAdmin 4 is installed)
 - [Postman](https://www.postman.com/downloads/) (For testing API endpoints)
+- [IDE](https://www.jetbrains.com/idea/download/) (For example Jetbrains IntelliJ IDEA)
 
 ## Step 1: Clone the Repository
 
@@ -27,21 +28,20 @@ Ensure you have the following installed on your system:
 ## Step 2: Configure PostgreSQL Database
 
 1. Open **pgAdmin** and create a new database.
-2. Name it `car_rental_db` or update the `application.properties` accordingly.
-3. Ensure PostgreSQL is running.
+2. Ensure your pgAdmin runs on localhost:5432
+3. Name it `car_rental_db` or update the `application.properties` accordingly.
+4. Ensure PostgreSQL is running.
 
 ## Step 3: Configure Application Properties
 
-Update `src/main/resources/application.properties` with your PostgreSQL credentials:
+Create `src/main/resources/application.local.properties` with your PostgreSQL credentials:
 
 ```properties
-    spring.datasource.url=jdbc:postgresql://localhost:5432/car_rental_db
-    spring.datasource.username=your_pg_username
-    spring.datasource.password=your_pg_password
-    
-    spring.jpa.hibernate.ddl-auto=update
-    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+    spring.datasource.username=<your_pg_username>
+    spring.datasource.password=<your_pg_password>
 ```
+
+Open run configuration and add `local` to your active profile.
 
 ## Step 4: Build and Run the Application
 
@@ -74,4 +74,4 @@ Use Maven to build and run the application:
   ```
 
 ## Troubleshooting
-- **Database connection error?** Ensure PostgreSQL is running and credentials are correct.
+- **Getting a Database connection error?** Ensure PostgreSQL is running and credentials are correct.

@@ -1,10 +1,10 @@
-package nl.novi.sd.carpark;
+package nl.novi.sd.carrental;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CarParkApplicationTests {
+class CarRentalApplicationTests {
 
     @Test
     void contextLoads() {
