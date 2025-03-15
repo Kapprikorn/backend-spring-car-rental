@@ -2,6 +2,7 @@
 ```mermaid
   classDiagram
     class User {
+        <<abstract>>
         +Long id
         +String name
         +String email
@@ -73,7 +74,7 @@
     Vehicle "1" -- "1" Status : has
     Customer "1" -- "0..*" Reservation : makes
     Vehicle "1" -- "0..*" Reservation : is reserved in
-    Vehicle "1" -- "0..1" ParkingSpace : is parked in
+    Vehicle "1" -- "1" ParkingSpace : is parked in
     Employee "1" -- "0..*" Vehicle : can update status of
     Admin "1" -- "0..*" Vehicle : can add/delete
     ParkingLot "1" -- "0..*" ParkingSpace : contains
