@@ -21,5 +21,5 @@ public class Location {
 
     @OneToMany
     @JoinColumn(name = "location_id")
-    private List<Employee> employees;
+    private List<User> users;
 }
