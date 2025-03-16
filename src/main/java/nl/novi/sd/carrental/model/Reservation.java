@@ -21,8 +21,8 @@ public class Reservation {
     private Double totalPrice;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")

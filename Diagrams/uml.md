@@ -2,25 +2,18 @@
 ```mermaid
   classDiagram
     class User {
-        <<abstract>>
         +Long id
         +String name
         +String email
         +String password
-        +String role
+        +Role role
     }
 
-    class Customer {
-        +String driverLicense
-    }
-
-    class Employee {
-        +String employeeId
-        +String position
-    }
-
-    class Admin {
-        +String adminId
+    class Role {
+        <<enumeration>>
+        CUSTOMER
+        EMPLOYEE
+        ADMIN
     }
 
     class Vehicle {
@@ -28,7 +21,6 @@
         +String licensePlate
         +String make
         +String model
-        +String type
         +Status status
         +Double pricePerDay
     }
@@ -67,17 +59,15 @@
     }
 
 %% Relationships
-    User <|-- Customer
-    User <|-- Employee
-    Employee <|-- Admin
-
-    Vehicle "1" -- "1" Status : has
-    Customer "1" -- "0..*" Reservation : makes
+    User "1" -- "0..*" Vehicle : EMPLOYEE can update status of
+    User "1" -- "0..*" Vehicle : ADMIN can add/delete
     Vehicle "1" -- "0..*" Reservation : is reserved in
-    Vehicle "1" -- "1" ParkingSpace : is parked in
-    Employee "1" -- "0..*" Vehicle : can update status of
-    Admin "1" -- "0..*" Vehicle : can add/delete
+    User "1" -- "0..*" Reservation : makes
     ParkingLot "1" -- "0..*" ParkingSpace : contains
+    Vehicle "1" -- "1" ParkingSpace : is parked in
+    Location "1" -- "0..*" User : employs
     Location "1" -- "0..*" ParkingLot : has
-    Location "1" -- "0..*" Employee : employs
+    User -- Role : has
+    Vehicle -- Status : has
+
 ```
