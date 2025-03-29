@@ -34,7 +34,7 @@ Ensure you have the following installed on your system:
 
 ## Step 3: Configure Application Properties
 
-Create `src/main/resources/application.local.properties` with your PostgreSQL credentials:
+Create `src/main/resources/application-local.properties` with your PostgreSQL credentials:
 
 ```properties
     spring.datasource.username=<your_pg_username>
