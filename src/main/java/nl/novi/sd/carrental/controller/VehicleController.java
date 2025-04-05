@@ -1,54 +1,63 @@
 package nl.novi.sd.carrental.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.novi.sd.carrental.dto.VehicleDto;
 import nl.novi.sd.carrental.model.Vehicle;
-import nl.novi.sd.carrental.repository.VehicleRepository;
-import org.springframework.http.ResponseEntity;
+import nl.novi.sd.carrental.service.VehicleService;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/vehicles")
 @RequiredArgsConstructor
 public class VehicleController {
 
-    private final VehicleRepository vehicleRepository;
+    private final VehicleService vehicleService;
 
+    private final ModelMapper mapper = new ModelMapper();
+
+    @ResponseBody
     @GetMapping
-    public List<Vehicle> getAllVehicles() {
-        return vehicleRepository.findAll();
+    public List<VehicleDto> getAllVehicles() {
+        return vehicleService.getVehicles().stream().map(this::mapToDto).toList();
     }
 
+    @ResponseBody
     @GetMapping("/{id}")
-    public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
-        return vehicleRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public VehicleDto getVehicleById(@PathVariable Long id) {
+        return this.mapToDto(vehicleService.getVehicle(id));
     }
 
+    @ResponseBody
     @PostMapping
-    public Vehicle createVehicle(@RequestBody Vehicle vehicle) {
-        return vehicleRepository.save(vehicle);
+    public VehicleDto createVehicle(@RequestBody VehicleDto vehicleDto) {
+        return this.mapToDto(
+                vehicleService.createVehicle(
+                        this.mapToEntity(vehicleDto)));
     }
 
+    @ResponseBody
     @PutMapping("/{id}")
-    public ResponseEntity<Vehicle> updateVehicle(@PathVariable Long id, @RequestBody Vehicle updatedVehicle) {
-        return vehicleRepository.findById(id)
-                .map(vehicle -> {
-                    // TODO: Setup logic in service layer.
-                    return ResponseEntity.ok(vehicleRepository.save(vehicle));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public VehicleDto updateVehicle(@PathVariable Long id, @RequestBody VehicleDto updatedVehicleDto) {
+        return this.mapToDto(vehicleService.updateVehicle(id, this.mapToEntity(updatedVehicleDto)));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteVehicle(@PathVariable Long id) {
-        return vehicleRepository.findById(id)
-                .map(vehicle -> {
-                    vehicleRepository.delete(vehicle);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteVehicle(@PathVariable Long id) {
+        vehicleService.deleteVehicle(id);
+    }
+
+    private VehicleDto mapToDto(Vehicle vehicle) {
+        return mapper.map(vehicle, VehicleDto.class);
+    }
+
+    private Vehicle mapToEntity(VehicleDto vehicleDto) {
+        return mapper.map(vehicleDto, Vehicle.class);
     }
 }
