@@ -1,9 +1,11 @@
 package nl.novi.sd.carrental.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.novi.sd.carrental.dto.ReservationDto;
 import nl.novi.sd.carrental.model.Reservation;
-import nl.novi.sd.carrental.repository.ReservationRepository;
-import org.springframework.http.ResponseEntity;
+import nl.novi.sd.carrental.service.ReservationService;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,42 +15,46 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
+    private final ModelMapper mapper = new ModelMapper();
+
+    @ResponseBody
     @GetMapping
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
+    public List<ReservationDto> getReservationsByUserId(@RequestParam Long userId) {
+        return reservationService.getReservationsByUserId(userId).stream().map(this::mapToDto).toList();
     }
 
+    @ResponseBody
     @GetMapping("/{id}")
-    public ResponseEntity<Reservation> getReservationById(@PathVariable Long id) {
-        return reservationRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ReservationDto getReservationById(@PathVariable Long id) {
+        return this.mapToDto(reservationService.getReservation(id));
     }
 
+    @ResponseBody
     @PostMapping
-    public Reservation createReservation(@RequestBody Reservation reservation) {
-        return reservationRepository.save(reservation);
+    public ReservationDto createReservation(@RequestBody ReservationDto reservationDto) {
+        return this.mapToDto(reservationService.createReservation(this.mapToEntity(reservationDto)));
     }
 
+    @ResponseBody
     @PutMapping("/{id}")
-    public ResponseEntity<Reservation> updateReservation(@PathVariable Long id, @RequestBody Reservation updatedReservation) {
-        return reservationRepository.findById(id)
-                .map(reservation -> {
-                    // TODO: Setup logic in service layer.
-                    return ResponseEntity.ok(reservationRepository.save(reservation));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ReservationDto updateReservation(@PathVariable Long id, @RequestBody ReservationDto updatedReservation) {
+        return this.mapToDto(reservationService.updateReservation(id, this.mapToEntity(updatedReservation)));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
-        return reservationRepository.findById(id)
-                .map(reservation -> {
-                    reservationRepository.delete(reservation);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteReservation(@PathVariable Long id) {
+        reservationService.deleteReservation(id);
+    }
+
+    private ReservationDto mapToDto(Reservation reservation) {
+        return mapper.map(reservation, ReservationDto.class);
+    }
+
+    private Reservation mapToEntity(ReservationDto reservationDto) {
+        return mapper.map(reservationDto, Reservation.class);
     }
 }
