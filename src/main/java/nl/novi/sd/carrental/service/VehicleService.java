@@ -5,13 +5,13 @@ import nl.novi.sd.carrental.model.Vehicle;
 import java.util.List;
 
 public interface VehicleService {
-    public Vehicle createVehicle(Vehicle vehicle);
+    Vehicle createVehicle(Vehicle vehicle);
 
-    public Vehicle getVehicle(Long id);
+    Vehicle getVehicle(Long id);
 
-    public List<Vehicle> getVehicles();
+    List<Vehicle> getVehicles();
 
-    public Vehicle updateVehicle(Long id, Vehicle vehicle);
+    Vehicle updateVehicle(Long id, Vehicle vehicle);
 
-    public void deleteVehicle(Long id);
+    void deleteVehicle(Long id);
 }
