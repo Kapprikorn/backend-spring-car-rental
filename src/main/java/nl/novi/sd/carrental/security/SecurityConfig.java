@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,19 +29,21 @@ public class SecurityConfig {
     protected SecurityFilterChain filter (HttpSecurity http) throws Exception {
 
         http
-                .csrf(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-                .cors(Customizer.withDefaults())
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/locations/**").hasAnyRole("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers("/parking-lots/**").hasAnyRole("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers("/parking-spaces/**").hasAnyRole("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers("/reservations/**").authenticated()
-                        .requestMatchers("/users/{id}").authenticated()
-                        .requestMatchers("/users/**").hasAnyRole("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers("/vehicles/**").hasAnyRole("ROLE_ADMIN", "ROLE_USER")
-
-                        .anyRequest().denyAll()
+                        .anyRequest().permitAll()
+//                        .requestMatchers("/locations/**").hasAnyRole("ADMIN", "USER")
+//                        .requestMatchers("/parking-lots/**").hasAnyRole("ADMIN", "USER")
+//                        .requestMatchers("/parking-spaces/**").hasAnyRole("ADMIN", "USER")
+//                        .requestMatchers("/reservations/**").authenticated()
+//                        .requestMatchers("/users/login").permitAll()
+//                        .requestMatchers("/users/{id}").authenticated()
+//                        .requestMatchers("/users/**").hasAnyRole("ADMIN", "USER")
+//                        .requestMatchers("/vehicles/**").hasAnyRole("ADMIN", "USER")
+//
+//                        .anyRequest().denyAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -51,11 +54,11 @@ public class SecurityConfig {
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("SELECT username, password, enabled" +
+                .usersByUsernameQuery("SELECT username, password, roles" +
                         " FROM users" +
                         " WHERE username=?")
-                .authoritiesByUsernameQuery("SELECT username, authority" +
-                        " FROM authorities " +
+                .authoritiesByUsernameQuery("SELECT role" +
+                        " FROM users " +
                         " WHERE username=?");
         return authenticationManagerBuilder.build();
     }
