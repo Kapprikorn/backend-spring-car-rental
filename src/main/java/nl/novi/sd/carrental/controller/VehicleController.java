@@ -35,10 +35,14 @@ public class VehicleController {
 
     @ResponseBody
     @PostMapping
-    public VehicleDto createVehicle(@RequestBody VehicleDto vehicleDto) {
-        return this.mapToDto(
-                vehicleService.createVehicle(
-                        this.mapToEntity(vehicleDto)));
+    public List<VehicleDto> createVehicle(@RequestBody List<VehicleDto> vehicleDtos) {
+        return vehicleDtos.stream().map(vehicleDto ->
+                this.mapToDto(
+                        vehicleService.createVehicle(
+                                this.mapToEntity(vehicleDto)
+                        )
+                )
+        ).toList();
     }
 
     @ResponseBody
