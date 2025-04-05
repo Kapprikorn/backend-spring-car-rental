@@ -45,12 +45,11 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     private void updateExistingVehicle(Vehicle existingVehicle, Vehicle updatedVehicle) {
-        if (updatedVehicle.getLicensePlate() != null) existingVehicle.setLicensePlate(updatedVehicle.getLicensePlate());
-        if (updatedVehicle.getMake() != null) existingVehicle.setMake(updatedVehicle.getMake());
-        if (updatedVehicle.getModel() != null) existingVehicle.setModel(updatedVehicle.getModel());
-        if (updatedVehicle.getStatus() != null) existingVehicle.setStatus(updatedVehicle.getStatus());
-        if (updatedVehicle.getPricePerDay() != null) existingVehicle.setPricePerDay(updatedVehicle.getPricePerDay());
-        if (updatedVehicle.getParkingSpace() != null) existingVehicle.setParkingSpace(updatedVehicle.getParkingSpace());
-
+        existingVehicle.setLicensePlate(updatedVehicle.getLicensePlate());
+        existingVehicle.setMake(updatedVehicle.getMake());
+        existingVehicle.setModel(updatedVehicle.getModel());
+        existingVehicle.setStatus(updatedVehicle.getStatus());
+        existingVehicle.setPricePerDay(updatedVehicle.getPricePerDay());
+        existingVehicle.setParkingSpace(updatedVehicle.getParkingSpace());
     }
 }
