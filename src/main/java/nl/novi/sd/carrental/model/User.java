@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "users") // Renamed to avoid reserved keyword conflict
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +18,6 @@ public class User {
     private String password;
     private String role;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 }
