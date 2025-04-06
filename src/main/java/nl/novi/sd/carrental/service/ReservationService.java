@@ -10,7 +10,7 @@ public interface ReservationService {
 
     Reservation getReservation(Long id);
 
-    Reservation createReservation(Reservation reservation);
+    Reservation createReservation(Long userId, Reservation reservation);
 
     Reservation updateReservation(Long id, Reservation reservation);
 

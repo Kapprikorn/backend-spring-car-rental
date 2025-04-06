@@ -33,8 +33,14 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping
-    public ReservationDto createReservation(@RequestBody ReservationDto reservationDto) {
-        return this.mapToDto(reservationService.createReservation(this.mapToEntity(reservationDto)));
+    public ReservationDto createReservation(
+            @RequestParam Long userId,
+            @RequestBody ReservationDto reservationDto
+    ) {
+        return this.mapToDto(reservationService.createReservation(
+                userId,
+                this.mapToEntity(reservationDto)
+        ));
     }
 
     @ResponseBody
