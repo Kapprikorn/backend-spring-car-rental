@@ -14,8 +14,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    private final UserService userService;
-
     @Override
     public List<Reservation> getReservationsByUserId(Long userId) {
         List<Reservation> reservations = reservationRepository.findAll().stream()
@@ -34,9 +32,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation createReservation(Long userId, Reservation reservation) {
+    public Reservation createReservation(Reservation reservation) {
         Reservation newReservation = reservationRepository.save(reservation);
-        newReservation.setUser(userService.getUser(userId));
         return reservationRepository.save(newReservation);
     }
 
