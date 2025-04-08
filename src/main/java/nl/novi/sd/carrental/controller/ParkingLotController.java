@@ -1,54 +1,51 @@
 package nl.novi.sd.carrental.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.novi.sd.carrental.dto.ParkingLotDto;
 import nl.novi.sd.carrental.model.ParkingLot;
-import nl.novi.sd.carrental.repository.ParkingLotRepository;
-import org.springframework.http.ResponseEntity;
+import nl.novi.sd.carrental.service.ParkingLotService;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/parking-lots")
 @RequiredArgsConstructor
 public class ParkingLotController {
 
-    private final ParkingLotRepository parkingLotRepository;
+    private final ParkingLotService parkingLotService;
 
-    @GetMapping
-    public List<ParkingLot> getAllParkingLots() {
-        return parkingLotRepository.findAll();
-    }
+    private final ModelMapper mapper = new ModelMapper();
 
+    @ResponseBody
     @GetMapping("/{id}")
-    public ResponseEntity<ParkingLot> getParkingLotById(@PathVariable Long id) {
-        return parkingLotRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ParkingLotDto getParkingLotById(@PathVariable Long id) {
+        return this.mapToDto(parkingLotService.getParkingLot(id));
     }
 
+    @ResponseBody
     @PostMapping
-    public ParkingLot createParkingLot(@RequestBody ParkingLot parkingLot) {
-        return parkingLotRepository.save(parkingLot);
+    public ParkingLotDto createParkingLot(@RequestBody ParkingLotDto parkingLot) {
+        return this.mapToDto(parkingLotService.createParkingLot(this.mapToEntity(parkingLot)));
     }
 
+    @ResponseBody
     @PutMapping("/{id}")
-    public ResponseEntity<ParkingLot> updateParkingLot(@PathVariable Long id, @RequestBody ParkingLot updatedParkingLot) {
-        return parkingLotRepository.findById(id)
-                .map(parkingLot -> {
-                    // TODO: Setup logic in service layer.
-                    return ResponseEntity.ok(parkingLotRepository.save(parkingLot));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ParkingLotDto updateParkingLot(@RequestBody ParkingLotDto updatedParkingLot) {
+        return this.mapToDto(parkingLotService.updateParkingLot(this.mapToEntity(updatedParkingLot)));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteParkingLot(@PathVariable Long id) {
-        return parkingLotRepository.findById(id)
-                .map(parkingLot -> {
-                    parkingLotRepository.delete(parkingLot);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteParkingLot(@PathVariable Long id) {
+        parkingLotService.deleteParkingLot(id);
+    }
+
+    private ParkingLotDto mapToDto(ParkingLot parkingLot) {
+        return mapper.map(parkingLot, ParkingLotDto.class);
+    }
+
+    private ParkingLot mapToEntity(ParkingLotDto parkingLotDto) {
+        return mapper.map(parkingLotDto, ParkingLot.class);
     }
 }
