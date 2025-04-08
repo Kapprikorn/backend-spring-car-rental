@@ -1,54 +1,51 @@
 package nl.novi.sd.carrental.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.novi.sd.carrental.dto.ParkingSpaceDto;
 import nl.novi.sd.carrental.model.ParkingSpace;
-import nl.novi.sd.carrental.repository.ParkingSpaceRepository;
-import org.springframework.http.ResponseEntity;
+import nl.novi.sd.carrental.service.ParkingSpaceService;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/parking-spaces")
 @RequiredArgsConstructor
 public class ParkingSpaceController {
 
-    private final ParkingSpaceRepository parkingSpaceRepository;
+    private final ParkingSpaceService parkingSpaceService;
 
-    @GetMapping
-    public List<ParkingSpace> getAllParkingSpaces() {
-        return parkingSpaceRepository.findAll();
-    }
+    private final ModelMapper mapper = new ModelMapper();
 
+    @ResponseBody
     @GetMapping("/{id}")
-    public ResponseEntity<ParkingSpace> getParkingSpaceById(@PathVariable Long id) {
-        return parkingSpaceRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ParkingSpaceDto getParkingSpaceById(@PathVariable Long id) {
+        return this.mapToDto(parkingSpaceService.getParkingSpace(id));
     }
 
+    @ResponseBody
     @PostMapping
-    public ParkingSpace createParkingSpace(@RequestBody ParkingSpace parkingSpace) {
-        return parkingSpaceRepository.save(parkingSpace);
+    public ParkingSpaceDto createParkingSpace(@RequestBody ParkingSpaceDto parkingSpaceDto) {
+        return this.mapToDto(
+                parkingSpaceService.createParkingSpace(
+                        this.mapToEntity(parkingSpaceDto)));
     }
 
+    @ResponseBody
     @PutMapping("/{id}")
-    public ResponseEntity<ParkingSpace> updateParkingSpace(@PathVariable Long id, @RequestBody ParkingSpace updatedParkingSpace) {
-        return parkingSpaceRepository.findById(id)
-                .map(parkingSpace -> {
-                    // TODO: Setup logic in service layer.
-                    return ResponseEntity.ok(parkingSpaceRepository.save(parkingSpace));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ParkingSpaceDto updateParkingSpace(@RequestBody ParkingSpaceDto updatedParkingSpace) {
+        return this.mapToDto(parkingSpaceService.updateParkingSpace(this.mapToEntity(updatedParkingSpace)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteParkingSpace(@PathVariable Long id) {
-        return parkingSpaceRepository.findById(id)
-                .map(parkingSpace -> {
-                    parkingSpaceRepository.delete(parkingSpace);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteParkingSpace(@PathVariable Long id) {
+        parkingSpaceService.deleteParkingSpace(id);
+    }
+
+    private ParkingSpaceDto mapToDto(ParkingSpace parkingSpace) {
+        return mapper.map(parkingSpace, ParkingSpaceDto.class);
+    }
+
+    private ParkingSpace mapToEntity(ParkingSpaceDto parkingSpaceDto) {
+        return mapper.map(parkingSpaceDto, ParkingSpace.class);
     }
 }
