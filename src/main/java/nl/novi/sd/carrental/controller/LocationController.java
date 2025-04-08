@@ -1,54 +1,55 @@
 package nl.novi.sd.carrental.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.novi.sd.carrental.dto.LocationDto;
 import nl.novi.sd.carrental.model.Location;
-import nl.novi.sd.carrental.repository.LocationRepository;
-import org.springframework.http.ResponseEntity;
+import nl.novi.sd.carrental.service.LocationService;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/locations")
 @RequiredArgsConstructor
 public class LocationController {
 
-    private final LocationRepository locationRepository;
+    private final LocationService locationService;
 
-    @GetMapping
-    public List<Location> getAllLocations() {
-        return locationRepository.findAll();
-    }
+    private final ModelMapper mapper = new ModelMapper();
 
+    @ResponseBody
     @GetMapping("/{id}")
-    public ResponseEntity<Location> getLocationById(@PathVariable Long id) {
-        return locationRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public LocationDto getLocationById(@PathVariable Long id) {
+        return this.mapToDto(locationService.getLocation(id));
     }
 
+    @ResponseBody
     @PostMapping
-    public Location createLocation(@RequestBody Location location) {
-        return locationRepository.save(location);
+    public LocationDto createLocation(@RequestBody LocationDto locationDto) {
+        return this.mapToDto(
+                locationService.saveLocation(this.mapToEntity(locationDto))
+            );
     }
 
+    @ResponseBody
     @PutMapping("/{id}")
-    public ResponseEntity<Location> updateLocation(@PathVariable Long id, @RequestBody Location updatedLocation) {
-        return locationRepository.findById(id)
-                .map(location -> {
-                    // TODO: Setup logic in service layer.
-                    return ResponseEntity.ok(locationRepository.save(location));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public LocationDto updateLocation(@PathVariable Long id, @RequestBody LocationDto updatedLocation) {
+        return this.mapToDto(
+                locationService.updateLocation(id, this.mapToEntity(updatedLocation))
+        );
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteLocation(@PathVariable Long id) {
-        return locationRepository.findById(id)
-                .map(location -> {
-                    locationRepository.delete(location);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteLocation(@PathVariable Long id) {
+        locationService.deleteLocation(id);
+    }
+
+    private LocationDto mapToDto(Location location) {
+        return mapper.map(location, LocationDto.class);
+    }
+
+    private Location mapToEntity(LocationDto locationDto) {
+        return mapper.map(locationDto, Location.class);
     }
 }
