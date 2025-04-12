@@ -61,21 +61,4 @@ public class UserController {
     private User mapToEntity(UserDto userDto) {
         return mapper.map(userDto, User.class);
     }
-
-
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody User user) {
-//        try {
-//            // Authenticate the user credentials
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-//            );
-//            // If authentication is successful
-//            return ResponseEntity.ok("Login successful for user: " + authentication.getName());
-//        } catch (AuthenticationException ex) {
-//            // Handle authentication failure
-//            return ResponseEntity.status(401).body("Invalid username or password!");
-//        }
-//    }
-
 }
