@@ -26,6 +26,26 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public List<Reservation> getActiveReservationsByUserId(Long userId) {
+        List<Reservation> reservations = reservationRepository.findAll().stream()
+                .filter(reservation ->
+                        reservation
+                            .getUser()
+                            .getId()
+                            .equals(userId))
+                .filter(reservation ->
+                        reservation
+                            .getEndDate()
+                            .toInstant()
+                            .isAfter(java.time.Instant.now()))
+                .toList();
+        if (reservations.isEmpty()) {
+            throw new ResourceNotFoundException("No active reservations found for user with ID: " + userId);
+        }
+        return reservations;
+    }
+
+    @Override
     public Reservation getReservation(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
