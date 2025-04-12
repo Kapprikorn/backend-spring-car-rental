@@ -1,12 +1,11 @@
 package nl.novi.sd.carrental.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.novi.sd.carrental.dto.UserDto;
 import nl.novi.sd.carrental.model.User;
-import nl.novi.sd.carrental.repository.UserRepository;
-import org.springframework.http.ResponseEntity;
-
-import org.springframework.security.authentication.AuthenticationManager;
-
+import nl.novi.sd.carrental.service.UserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,58 +15,50 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
+    private final ModelMapper mapper = new ModelMapper();
+
+    @ResponseBody
     @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUsers() {
+        return userService
+                .getAllUsers()
+                .stream()
+                .map(this::mapToDto)
+                .toList();
     }
 
+    @ResponseBody
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public UserDto getUserById(@PathVariable Long id) {
+        return this.mapToDto(userService.getUser(id));
     }
 
+    @ResponseBody
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepository.save(user);
+    public UserDto createUser(@RequestBody UserDto userDto) {
+        return this.mapToDto(userService.createUser(this.mapToEntity(userDto)));
     }
 
+    @ResponseBody
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    // TODO: Setup logic in service layer.
-                    return ResponseEntity.ok(userRepository.save(user));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public UserDto updateUser(@RequestBody UserDto updatedUser) {
+        return this.mapToDto(userService.updateUser(this.mapToEntity(updatedUser)));
     }
 
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    userRepository.delete(user);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody User user) {
-//        try {
-//            // Authenticate the user credentials
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-//            );
-//            // If authentication is successful
-//            return ResponseEntity.ok("Login successful for user: " + authentication.getName());
-//        } catch (AuthenticationException ex) {
-//            // Handle authentication failure
-//            return ResponseEntity.status(401).body("Invalid username or password!");
-//        }
-//    }
+    private UserDto mapToDto(User user) {
+        return mapper.map(user, UserDto.class);
+    }
 
+    private User mapToEntity(UserDto userDto) {
+        return mapper.map(userDto, User.class);
+    }
 }

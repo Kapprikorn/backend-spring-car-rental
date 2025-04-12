@@ -22,7 +22,21 @@ public class ReservationController {
     @ResponseBody
     @GetMapping
     public List<ReservationDto> getReservationsByUserId(@RequestParam Long userId) {
-        return reservationService.getReservationsByUserId(userId).stream().map(this::mapToDto).toList();
+        return reservationService
+                .getReservationsByUserId(userId)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
+    @ResponseBody
+    @GetMapping
+    public List<ReservationDto> getActiveReservationsByUserId(@RequestParam Long userId) {
+        return reservationService
+                .getActiveReservationsByUserId(userId)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
     }
 
     @ResponseBody
