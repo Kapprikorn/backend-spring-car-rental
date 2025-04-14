@@ -20,8 +20,8 @@ public class ReservationController {
     private final ModelMapper mapper = new ModelMapper();
 
     @ResponseBody
-    @GetMapping
-    public List<ReservationDto> getReservationsByUserId(@RequestParam Long userId) {
+    @GetMapping("/users/{userId}")
+    public List<ReservationDto> getReservationsByUserId(@PathVariable Long userId) {
         return reservationService
                 .getReservationsByUserId(userId)
                 .stream()
@@ -30,8 +30,8 @@ public class ReservationController {
     }
 
     @ResponseBody
-    @GetMapping
-    public List<ReservationDto> getActiveReservationsByUserId(@RequestParam Long userId) {
+    @GetMapping("/users/{userId}/active")
+    public List<ReservationDto> getActiveReservationsByUserId(@PathVariable Long userId) {
         return reservationService
                 .getActiveReservationsByUserId(userId)
                 .stream()
