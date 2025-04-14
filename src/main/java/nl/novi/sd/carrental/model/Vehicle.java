@@ -28,4 +28,8 @@ public class Vehicle {
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
+
+    @OneToOne
+    @JoinColumn(name = "vehicle_photo_id")
+    private VehiclePhoto vehiclePhoto;
 }

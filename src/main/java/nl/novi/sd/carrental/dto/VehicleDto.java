@@ -14,4 +14,5 @@ public class VehicleDto {
     private Double pricePerDay;
     private Long parkingSpaceId;
     private List<ReservationDto> reservations;
+    private Long photoId;
 }
