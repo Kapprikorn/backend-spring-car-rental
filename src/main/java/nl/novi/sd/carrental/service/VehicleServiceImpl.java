@@ -15,37 +15,36 @@ import java.util.List;
 public class VehicleServiceImpl implements VehicleService {
 
     public static final String VEHICLE_NOT_FOUND_MESSAGE = "Vehicle not found";
-    private final VehicleRepository VehicleRepository;
     private final VehicleRepository vehicleRepository;
 
     @Override
     public Vehicle createVehicle(Vehicle vehicle) {
-        return VehicleRepository.save(vehicle);
+        return vehicleRepository.save(vehicle);
     }
 
     @Override
     public Vehicle getVehicle(Long id) {
-        return VehicleRepository.findById(id)
+        return vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(VEHICLE_NOT_FOUND_MESSAGE));
     }
 
     @Override
     public List<Vehicle> getVehicles() {
-        return VehicleRepository.findAll();
+        return vehicleRepository.findAll();
     }
 
     @Override
     public Vehicle updateVehicle(Long vehicleId, Vehicle updatedVehicle) {
-        Vehicle existingVehicle = VehicleRepository.findById(vehicleId)
+        Vehicle existingVehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new ResourceNotFoundException(VEHICLE_NOT_FOUND_MESSAGE));
 
         updateExistingVehicle(existingVehicle, updatedVehicle);
-        return VehicleRepository.save(existingVehicle);
+        return vehicleRepository.save(existingVehicle);
     }
 
     @Override
     public void deleteVehicle(Long id) {
-        VehicleRepository.deleteById(id);
+        vehicleRepository.deleteById(id);
     }
 
     @Override
