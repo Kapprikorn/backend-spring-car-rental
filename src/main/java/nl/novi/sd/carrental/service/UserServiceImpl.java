@@ -2,6 +2,7 @@ package nl.novi.sd.carrental.service;
 
 import lombok.RequiredArgsConstructor;
 import nl.novi.sd.carrental.exception.ResourceNotFoundException;
+import nl.novi.sd.carrental.exception.UsernameAlreadyExistsException;
 import nl.novi.sd.carrental.model.User;
 import nl.novi.sd.carrental.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
+    }
+
+    @Override
     public User createUser(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new UsernameAlreadyExistsException("Username already exists");
+        }
         return userRepository.save(user);
     }
 

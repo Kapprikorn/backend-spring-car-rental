@@ -23,4 +23,11 @@ public class ErrorHandlingControllerAdvice {
     public String handleResourceNotFoundException(ResourceNotFoundException ex) {
         return ex.getMessage();
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public String handleUserAlreadyExistsException(UsernameAlreadyExistsException ex) {
+        return ex.getMessage();
+    }
 }
