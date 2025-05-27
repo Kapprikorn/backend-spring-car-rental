@@ -1,5 +1,6 @@
 package nl.novi.sd.carrental.security.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nl.novi.sd.carrental.model.User;
 import nl.novi.sd.carrental.model.UserRole;
@@ -29,7 +30,7 @@ public class AuthController {
 
     @ResponseBody
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest request) {
+    public AuthenticationResponse login(@Valid @RequestBody AuthenticationRequest request) {
         User user = userService.getUserByUsername(request.getUsername());
 
         Authentication authentication = authenticationManager.authenticate(
@@ -49,14 +50,14 @@ public class AuthController {
 
     @ResponseBody
     @PostMapping("/register")
-    public AuthenticationResponse register(@RequestBody RegistrationRequest request) {
+    public AuthenticationResponse register(@Valid @RequestBody RegistrationRequest request) {
 
         return handleRegistration(request, UserRole.USER);
     }
 
     @ResponseBody
     @PostMapping("/register/admin")
-    public AuthenticationResponse registerAdmin(@RequestBody RegistrationRequest request) {
+    public AuthenticationResponse registerAdmin(@Valid @RequestBody RegistrationRequest request) {
         return handleRegistration(request, UserRole.ADMIN);
     }
 

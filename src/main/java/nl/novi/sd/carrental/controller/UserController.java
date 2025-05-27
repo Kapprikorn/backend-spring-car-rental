@@ -1,5 +1,6 @@
 package nl.novi.sd.carrental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nl.novi.sd.carrental.dto.UserDto;
 import nl.novi.sd.carrental.model.User;
@@ -37,13 +38,13 @@ public class UserController {
 
     @ResponseBody
     @PostMapping
-    public UserDto createUser(@RequestBody UserDto userDto) {
+    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         return this.mapToDto(userService.createUser(this.mapToEntity(userDto)));
     }
 
     @ResponseBody
     @PutMapping("/{id}")
-    public UserDto updateUser(@RequestBody UserDto updatedUser) {
+    public UserDto updateUser(@Valid @RequestBody UserDto updatedUser) {
         return this.mapToDto(userService.updateUser(this.mapToEntity(updatedUser)));
     }
 

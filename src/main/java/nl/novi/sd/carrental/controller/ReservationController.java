@@ -1,5 +1,6 @@
 package nl.novi.sd.carrental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nl.novi.sd.carrental.dto.ReservationDto;
 import nl.novi.sd.carrental.model.Reservation;
@@ -48,7 +49,7 @@ public class ReservationController {
     @ResponseBody
     @PostMapping
     public ReservationDto createReservation(
-            @RequestBody ReservationDto reservationDto
+            @Valid @RequestBody ReservationDto reservationDto
     ) {
         return this.mapToDto(reservationService.createReservation(
                 this.mapToEntity(reservationDto)
@@ -57,7 +58,10 @@ public class ReservationController {
 
     @ResponseBody
     @PutMapping("/{id}")
-    public ReservationDto updateReservation(@PathVariable Long id, @RequestBody ReservationDto updatedReservation) {
+    public ReservationDto updateReservation(
+            @PathVariable Long id,
+            @Valid @RequestBody ReservationDto updatedReservation
+    ) {
         return this.mapToDto(reservationService.updateReservation(id, this.mapToEntity(updatedReservation)));
     }
 
