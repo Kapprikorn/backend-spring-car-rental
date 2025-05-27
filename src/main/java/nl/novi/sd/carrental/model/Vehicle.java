@@ -1,6 +1,10 @@
 package nl.novi.sd.carrental.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 import java.util.List;
@@ -12,13 +16,27 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "License plate is required")
+    @Pattern(regexp = "^[A-Z0-9-]+$", message = "License plate must contain only uppercase letters, numbers, and hyphens")
+    @Column(nullable = false, unique = true)
     private String licensePlate;
+
+    @NotBlank(message = "Make is required")
+    @Column(nullable = false)
     private String make;
+
+    @NotBlank(message = "Model is required")
+    @Column(nullable = false)
     private String model;
 
+    @NotNull(message = "Status is required")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusCode status;
 
+    @NotNull(message = "Price per day is required")
+    @Positive(message = "Price per day must be positive")
+    @Column(nullable = false)
     private Double pricePerDay;
 
     @OneToOne

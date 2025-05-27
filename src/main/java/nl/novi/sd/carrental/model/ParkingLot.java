@@ -1,6 +1,8 @@
 package nl.novi.sd.carrental.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -12,10 +14,13 @@ public class ParkingLot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is required")
+    @Column(nullable = false)
     private String name;
 
+    @NotNull(message = "Location is required")
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 
     @OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL)

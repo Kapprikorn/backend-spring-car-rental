@@ -1,5 +1,6 @@
 package nl.novi.sd.carrental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nl.novi.sd.carrental.dto.LocationDto;
 import nl.novi.sd.carrental.model.Location;
@@ -25,7 +26,7 @@ public class LocationController {
 
     @ResponseBody
     @PostMapping
-    public LocationDto createLocation(@RequestBody LocationDto locationDto) {
+    public LocationDto createLocation(@Valid @RequestBody LocationDto locationDto) {
         return this.mapToDto(
                 locationService.saveLocation(this.mapToEntity(locationDto))
             );
@@ -33,7 +34,10 @@ public class LocationController {
 
     @ResponseBody
     @PutMapping("/{id}")
-    public LocationDto updateLocation(@PathVariable Long id, @RequestBody LocationDto updatedLocation) {
+    public LocationDto updateLocation(
+            @PathVariable Long id,
+            @Valid @RequestBody LocationDto updatedLocation
+    ) {
         return this.mapToDto(
                 locationService.updateLocation(id, this.mapToEntity(updatedLocation))
         );

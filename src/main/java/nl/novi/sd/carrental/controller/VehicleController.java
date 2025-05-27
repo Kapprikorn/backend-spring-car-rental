@@ -1,5 +1,6 @@
 package nl.novi.sd.carrental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nl.novi.sd.carrental.dto.VehicleDto;
 import nl.novi.sd.carrental.model.Vehicle;
@@ -47,7 +48,7 @@ public class VehicleController {
 
     @ResponseBody
     @PostMapping
-    public List<VehicleDto> createVehicle(@RequestBody List<VehicleDto> vehicleDtos) {
+    public List<VehicleDto> createVehicle(@Valid @RequestBody List<VehicleDto> vehicleDtos) {
         return vehicleDtos.stream().map(vehicleDto ->
                 this.mapToDto(
                         vehicleService.createVehicle(
@@ -60,7 +61,7 @@ public class VehicleController {
     @ResponseBody
     @PutMapping("/{id}")
     public VehicleDto updateVehicle(@PathVariable Long id,
-                                    @RequestBody VehicleDto updatedVehicleDto) {
+                                    @Valid @RequestBody VehicleDto updatedVehicleDto) {
         return this.mapToDto(vehicleService.updateVehicle(id, this.mapToEntity(updatedVehicleDto)));
     }
 

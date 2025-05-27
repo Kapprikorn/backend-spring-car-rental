@@ -1,5 +1,6 @@
 package nl.novi.sd.carrental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nl.novi.sd.carrental.dto.ParkingLotDto;
 import nl.novi.sd.carrental.model.ParkingLot;
@@ -25,13 +26,13 @@ public class ParkingLotController {
 
     @ResponseBody
     @PostMapping
-    public ParkingLotDto createParkingLot(@RequestBody ParkingLotDto parkingLot) {
+    public ParkingLotDto createParkingLot(@Valid @RequestBody ParkingLotDto parkingLot) {
         return this.mapToDto(parkingLotService.createParkingLot(this.mapToEntity(parkingLot)));
     }
 
     @ResponseBody
     @PutMapping("/{id}")
-    public ParkingLotDto updateParkingLot(@RequestBody ParkingLotDto updatedParkingLot) {
+    public ParkingLotDto updateParkingLot(@Valid @RequestBody ParkingLotDto updatedParkingLot) {
         return this.mapToDto(parkingLotService.updateParkingLot(this.mapToEntity(updatedParkingLot)));
     }
 
