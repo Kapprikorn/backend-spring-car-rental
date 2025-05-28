@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -18,22 +19,26 @@ public class User {
     private Long id;
 
     @NotBlank(message = "Name is required")
+    @Length(max = 255, message = "Name can't exceed 255 characters")
     @Column(nullable = false)
     private String name;
 
     @NotBlank(message = "Username is required")
+    @Length(max = 255, message = "Username can't exceed 255 characters")
     @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "Username must contain only letters, numbers, and underscores")
     @Column(unique = true, nullable = false)
     private String username;
 
     @NotBlank(message = "Password is required")
+    @Length(max = 255, message = "Can't exceed 255 characters")
     @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$", 
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$",
              message = "Password must contain at least one digit, one lowercase letter, one uppercase letter, and one special character")
     @Column(nullable = false)
     private String password;
 
     @NotBlank(message = "Email is required")
+    @Length(max = 255, message = "Can't exceed 255 characters")
     @Email(message = "Email should be valid")
     @Column(unique = true, nullable = false)
     private String email;

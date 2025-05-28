@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class ParkingLot {
 
     @NotBlank(message = "Name is required")
     @Column(nullable = false)
+    @Length(max = 255, message = "Name can't exceed 255 characters")
     private String name;
 
     @NotNull(message = "Location is required")

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -17,15 +18,18 @@ public class Vehicle {
     private Long id;
 
     @NotBlank(message = "License plate is required")
+    @Length(max = 255, message = "LicensePlate can't exceed 255 characters")
     @Pattern(regexp = "^[A-Z0-9-]+$", message = "License plate must contain only uppercase letters, numbers, and hyphens")
     @Column(nullable = false, unique = true)
     private String licensePlate;
 
     @NotBlank(message = "Make is required")
+    @Length(max = 255, message = "Make can't exceed 255 characters")
     @Column(nullable = false)
     private String make;
 
     @NotBlank(message = "Model is required")
+    @Length(max = 255, message = "Model can't exceed 255 characters")
     @Column(nullable = false)
     private String model;
 

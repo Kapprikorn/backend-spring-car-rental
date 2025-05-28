@@ -1,7 +1,6 @@
 package nl.novi.sd.carrental;
 
 import nl.novi.sd.carrental.model.User;
-import nl.novi.sd.carrental.model.UserRole;
 import nl.novi.sd.carrental.repository.UserRepository;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
@@ -20,24 +19,14 @@ public class DataInitializer {
 
     @EventListener(ApplicationReadyEvent.class)
     public void initializeData() {
-        // Only initialize if no users exist
-        if (userRepository.count() == 0) {
-            // Create admin user
-            User admin = new User();
-            admin.setName("Admin User");
-            admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setEmail("admin@testaccount.com");
-            admin.setRole(UserRole.ADMIN);
+        User admin = userRepository.findByUsername("admin").orElse(null);
+        if (admin != null) {
+            admin.setPassword(passwordEncoder.encode("Admin!23"));
             userRepository.save(admin);
-
-            // Create regular user
-            User user = new User();
-            user.setName("Regular User");
-            user.setUsername("user");
-            user.setPassword(passwordEncoder.encode("user123"));
-            user.setEmail("user@testaccount.com");
-            user.setRole(UserRole.USER);
+        }
+        User user = userRepository.findByUsername("user").orElse(null);
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode("User!23"));
             userRepository.save(user);
         }
     }
