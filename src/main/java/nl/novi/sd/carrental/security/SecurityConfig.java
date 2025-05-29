@@ -43,13 +43,17 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/vehicles/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/vehicles/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/vehicles/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/locations/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/locations/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/locations/**").hasRole("ADMIN")
+                .requestMatchers("/locations/**").hasRole("ADMIN")
+                .requestMatchers("/parking-lots/**").hasRole("ADMIN")
+                .requestMatchers("/parking-spaces/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/users/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
 
                 // User and Admin accessible endpoints
                 .requestMatchers(HttpMethod.GET, "/vehicles/**").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.GET, "/locations/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN", "USER")
                 .requestMatchers("/reservations/**").authenticated()
                 .requestMatchers("/users/{id}").authenticated()
 
