@@ -5,11 +5,12 @@
         +Long id
         +String name
         +String email
+        +String username
         +String password
-        +Role role
+        +UserRole userRole
     }
 
-    class Role {
+    class UserRole {
         <<enumeration>>
         CUSTOMER
         EMPLOYEE
@@ -21,9 +22,18 @@
         +String licensePlate
         +String make
         +String model
-        +Status status
+        +StatusCode statusCode
         +Double pricePerDay
     }
+
+    class VehiclePhoto {
+        +Long id
+        +String url
+        +String originalFileName
+        +String contentType
+        +byte[] contents
+    }
+
 
     class Reservation {
         +Long id
@@ -51,7 +61,7 @@
         +String phoneNumber
     }
 
-    class Status {
+    class StatusCode {
         <<enumeration>>
         AVAILABLE
         RENTED_OUT
@@ -67,7 +77,7 @@
     Vehicle "1" -- "1" ParkingSpace : is parked in
     Location "1" -- "0..*" User : employs
     Location "1" -- "0..*" ParkingLot : has
-    User -- Role : has
-    Vehicle -- Status : has
-
+    User -- UserRole : has
+    Vehicle -- StatusCode : has
+    Vehicle "1" --* "1" VehiclePhoto : has
 ```
