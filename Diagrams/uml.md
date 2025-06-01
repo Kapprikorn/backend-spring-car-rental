@@ -12,8 +12,7 @@
 
     class UserRole {
         <<enumeration>>
-        CUSTOMER
-        EMPLOYEE
+        USER
         ADMIN
     }
 
